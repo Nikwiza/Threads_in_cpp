@@ -1,0 +1,1 @@
+cout<<vremena[0].pocetak<<": "<<vremena[0].kraj;

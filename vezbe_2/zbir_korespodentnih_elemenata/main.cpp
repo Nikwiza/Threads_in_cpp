@@ -33,8 +33,9 @@ void testirajSumu() {
     cout << "Suma vektora pozivom funkcije f:" << endl;
 
     for (vector<double>::const_iterator it = sum.begin(); it != sum.end(); it++) {
-        cout << *it << endl;
+        cout << *it << " ";
     }
+    cout<<endl;
 }
 
 void testirajNiti() {
@@ -47,14 +48,14 @@ void testirajNiti() {
     cout << "Suma vektora, koriscenjem 2 niti: " << endl;
 
     for (vector<double>::const_iterator it = sum.begin(); it != sum.end(); it++) {
-        cout << *it << endl;
+        cout << *it << " ";
     }
 }
 
 int main() {
     testirajSumu();
     // Otkomentarisati kada implementirate funkciju sumiraj:
-    //testirajNiti();
+    testirajNiti();
 
     return 0;
 }

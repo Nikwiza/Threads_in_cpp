@@ -1,16 +1,22 @@
 #ifndef PARKING_H_INCLUDED
 #define PARKING_H_INCLUDED
 
+#include <mutex>
+#include <condition_variable>
+
 #include "automobil.h"
 
 using namespace std;
 
 class Parking {
+    mutex m;
+    condition_variable c;
+    int slobodnih_mesta;
 private:
     Automobil& automobil;
 
 public:
-    Parking(Automobil& a, int kapacitet) : automobil(a) {
+    Parking(Automobil& a, int kapacitet) : automobil(a), slobodnih_mesta(kapacitet) {
         // Proširiti po potrebi ...
     }
 
@@ -22,7 +28,13 @@ public:
     // Potrebno je pozvati metodu automobil.ceka kada je parking zauzet i auto ne može da se parkira.
     // Potrebno je pozvati metodu automobil.parkira kada auto uspe da se parkira.
     void udji(int rbr) {
-        // Implementirati ...
+        unique_lock<mutex> l(m);
+        while(slobodnih_mesta <= 0){
+            automobil.ceka(rbr);
+            c.wait(l);
+        }
+        automobil.parkira(rbr);
+        slobodnih_mesta--;
     }
 
     // Metoda koju poziva nit koja simulira kretanje automobila kada auto izlazi sa parkinga (nakon što je bio parkiran).
@@ -31,7 +43,10 @@ public:
     //
     // Potrebno je pozvati metodu automobil.napusta kada auto napušta parking mesto.
     void izadji(int rbr) {
-        // Implementirati ...
+        unique_lock<mutex> l(m);
+        automobil.napusta(rbr);
+        slobodnih_mesta++;
+        c.notify_one();
     }
 };
 
